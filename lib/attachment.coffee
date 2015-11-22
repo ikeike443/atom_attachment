@@ -8,7 +8,7 @@ path   = require 'path'
 
 {CompositeDisposable} = require 'atom'
 
-supportedScopes = new Set ['source.gfm', 'text.plain.null-grammar']
+supportedScopes = new Set ['source.gfm', 'text.plain.null-grammar', 'source.asciidoc']
 
 # this is used to normalize attached files extensions
 mime_to_ext = {
@@ -91,27 +91,44 @@ module.exports = Attachment =
       raise "Problem setting up write directory"
 
   insertImage: (textEditor, src, desc) ->
-    textEditor.insertText('!['+desc+'](' + src + ')\n')
+    fext = @extractExt textEditor
+
+    switch
+      when fext.match "md"
+        textEditor.insertText('!['+desc+'](' + src + ')\n')
+      when fext.match "adoc"
+        textEditor.insertText('\nimage::'+src+'['+desc+']\n')
 
   insertLink: (textEditor, src, desc) ->
-    textEditor.insertText('['+desc+'](' + src + ')\n')
+    fext = @extractExt textEditor
+
+    switch
+      when fext.match "md"
+        textEditor.insertText('['+desc+'](' + src + ')\n')
+      when fext.match "adoc"
+        textEditor.insertText('\nlink::'+src+'['+desc+']\n')
 
   insertCode: (textEditor, content, format) ->
     textEditor.insertText('```'+format+'\n' + content + '\n```')
 
   # compute hash of the file (only the first bytes are used)
   head_md5: (f) ->
-    bc = atom.config.get('mdattachment.fileHashBytes')
+    bc = atom.config.get('attachment.fileHashBytes')
     fd = fs.openSync f.path, 'r'
     buffer = new Buffer(bc)
     bc = fs.readSync fd, buffer, 0, bc, 0
     return md5 buffer
 
+  extractExt: (textEditor) ->
+    fname = textEditor.getTitle()
+    [first, ..., fext] = fname.split(".")
+    return fext
+
   # ------------------------------------------------------------ handleDropEvent
   # This is the main method
   handleDropEvent: (textEditor, e) ->
     files = e.dataTransfer.files
-    move = atom.config.get('mdattachment.moveFiles')
+    move = atom.config.get('attachment.moveFiles')
 
     # TODO: write error message to GUI
     try
@@ -120,8 +137,6 @@ module.exports = Attachment =
       return
 
     for f in files
-
-
       fc = @classify_file(f)
       continue unless fc["class"]
 
