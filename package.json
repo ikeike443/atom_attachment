@@ -1,13 +1,13 @@
 {
-  "name": "mdattachment",
-  "main": "./lib/mdattachment",
-  "version": "0.3.0",
-  "description": "Attach files to markdown document as a link to an external file or image",
+  "name": "attachment",
+  "main": "./lib/attachment",
+  "version": "0.0.1",
+  "description": "Attach files to document as a link to an external file or image",
   "keywords": [],
-  "repository": "https://github.com/multiscan/atom_mdattachment.git",
+  "repository": "https://github.com/ikeike443/atom_attachment.git",
   "author": {
-    "name": "Giovanni Cangiani",
-    "email": "giovanni.cangiani@epfl.ch"
+    "name": "Takafumi Ikeda",
+    "email": "ikeike443@github.com"
   },
   "license": "MIT",
   "engines": {
