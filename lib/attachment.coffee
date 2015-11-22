@@ -18,7 +18,7 @@ mime_to_ext = {
   'application/pdf': '.pdf'
 }
 
-module.exports = Mdattachment =
+module.exports = Attachment =
   subscriptions: null
   # mdattachmentView: null
   # modalPanel: null
@@ -67,10 +67,10 @@ module.exports = Mdattachment =
   #   #   @modalPanel.show()
 
   outDir: (textEditor) ->
-    one = atom.config.get('mdattachment.oneDirFolAllBuffers')
+    one = atom.config.get('attachment.oneDirFolAllBuffers')
     mdfile = path.parse(textEditor.getPath())
     if one
-      atdir =  atom.config.get('mdattachment.commonDirName')
+      atdir =  atom.config.get('attachment.commonDirName')
     else
       atdir = mdfile.base.replace(/\.[^.]*$/, '')
     odir = path.join mdfile.dir, atdir
